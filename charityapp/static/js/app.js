@@ -28,11 +28,11 @@ document.addEventListener("DOMContentLoaded", function() {
       /**
        * Pagination buttons
        */
-      this.$el.addEventListener("click", e => {
-        if (e.target.classList.contains("btn") && e.target.parentElement.parentElement.classList.contains("help--slides-pagination")) {
-          this.changePage(e);
-        }
-      });
+      // this.$el.addEventListener("click", e => {
+      //   if (e.target.classList.contains("btn") && e.target.parentElement.parentElement.classList.contains("help--slides-pagination")) {
+      //     this.changePage(e);
+      //   }
+      // });
     }
 
     changeSlide(e) {
@@ -59,12 +59,12 @@ document.addEventListener("DOMContentLoaded", function() {
     /**
      * TODO: callback to page change event
      */
-    changePage(e) {
-      e.preventDefault();
-      const page = e.target.dataset.page;
-
-      console.log(page);
-    }
+    // changePage(e) {
+    //   e.preventDefault();
+    //   const page = e.target.dataset.page;
+    //
+    //   console.log(page);
+    // }
   }
   const helpSection = document.querySelector(".help");
   if (helpSection !== null) {
