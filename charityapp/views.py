@@ -17,13 +17,21 @@ class IndexView(View):
         fundations_list = Institution.objects.filter(type=1)
         non_gov_list = Institution.objects.filter(type=2)
         locals_list = Institution.objects.filter(type=3)
-        paginator = Paginator(fundations_list, 5)
+        paginator_fundations = Paginator(fundations_list, 5)
+        paginator_non_gov = Paginator(non_gov_list, 5)
+        paginator_locals = Paginator(locals_list, 5)
         count_institution = Institution.objects.all().count()
-        page = request.GET.get('page')
-        fundations = paginator.get_page(page)
+        fundations_page = request.GET.get('fundations_page')
+        non_govs_page = request.GET.get('non_govs_page')
+        locals_page = request.GET.get('locals_page')
+        fundations = paginator_fundations.get_page(fundations_page)
+        non_govs = paginator_non_gov.get_page(non_govs_page)
+        locals = paginator_locals.get_page(locals_page)
         return render(request, 'index.html', {"quantity": quantity,
                                               "count_institution": count_institution,
-                                              "fundations": fundations})
+                                              "fundations": fundations,
+                                              "non_govs": non_govs,
+                                              "locals": locals})
 
 
 class RegisterView(View):
