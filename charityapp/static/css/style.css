@@ -468,7 +468,7 @@ h2:after {
     -o-transition: border-color 0.2s ease-in-out;
     transition: border-color 0.2s ease-in-out;
     background: transparent;
-    cursor: pointer;
+    /*cursor: pointer;*/
 }
 
 /* line 12, scss/modules/_buttons.scss */
