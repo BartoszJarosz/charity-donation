@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
+from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
 
 # Create your views here.
@@ -13,9 +14,16 @@ class IndexView(View):
         quantity = 0
         for donation in Donation.objects.all():
             quantity += donation.quantity
+        fundations_list = Institution.objects.filter(type=1)
+        non_gov_list = Institution.objects.filter(type=2)
+        locals_list = Institution.objects.filter(type=3)
+        paginator = Paginator(fundations_list, 5)
         count_institution = Institution.objects.all().count()
+        page = request.GET.get('page')
+        fundations = paginator.get_page(page)
         return render(request, 'index.html', {"quantity": quantity,
-                                              "count_institution": count_institution})
+                                              "count_institution": count_institution,
+                                              "fundations": fundations})
 
 
 class RegisterView(View):
@@ -30,11 +38,11 @@ class RegisterView(View):
             surname = form.cleaned_data['surname']
             email = form.cleaned_data['email']
             password = form.cleaned_data['password1']
-            user = User.objects.create_user(first_name=name,
-                                            last_name=surname,
-                                            username=email,
-                                            password=password,
-                                            email=email)
+            User.objects.create_user(first_name=name,
+                                     last_name=surname,
+                                     username=email,
+                                     password=password,
+                                     email=email)
             return render(request, 'register-complete.html')
         else:
             return render(request, 'register.html', {"form": form})
