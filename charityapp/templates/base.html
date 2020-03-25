@@ -40,30 +40,40 @@
             <li><a href="#contact" class="btn btn--without-border">Kontakt</a></li>
         </ul>
     </nav>
-    {% block content %}
-    {% endblock %}
-    <footer>
-        <div id="contact" class="contact">
-            <h2>Skontaktuj się z nami</h2>
-            <h3>Formularz kontaktowy</h3>
-            <form class="form--contact">
-                <div class="form-group form-group--50"><input type="text" name="name" placeholder="Imię"/></div>
-                <div class="form-group form-group--50"><input type="text" name="surname" placeholder="Nazwisko"/></div>
-
-                <div class="form-group"><textarea name="message" placeholder="Wiadomość" rows="1"></textarea></div>
-
-                <button class="btn" type="submit">Wyślij</button>
-            </form>
+    <div class="slogan container container--90">
+        <div class="slogan--item">
+            <h1>
+                Zacznij pomagać!<br/>
+                Oddaj niechciane rzeczy w zaufane ręce
+            </h1>
         </div>
-        <div class="bottom-line">
-            <span class="bottom-line--copy">Copyright &copy; 2020</span>
-            <div class="bottom-line--icons">
-                <a href="#" class="btn btn--small"><img src="{% static 'images/icon-facebook.svg' %}"/></a>
-                <a href="#" class="btn btn--small"><img src="{% static 'images/icon-instagram.svg' %}"/></a>
-            </div>
-        </div>
-    </footer>
+    </div>
+</header>
+{% block content %}
+{% endblock %}
+<footer>
+    <div id="contact" class="contact">
+        <h2>Skontaktuj się z nami</h2>
+        <h3>Formularz kontaktowy</h3>
+        <form class="form--contact">
+            <div class="form-group form-group--50"><input type="text" name="name" placeholder="Imię"/></div>
+            <div class="form-group form-group--50"><input type="text" name="surname" placeholder="Nazwisko"/></div>
 
-    <script src="{% static 'js/app.js' %}"></script>
+            <div class="form-group"><textarea name="message" placeholder="Wiadomość" rows="1"></textarea></div>
+
+            <button class="btn" type="submit">Wyślij</button>
+        </form>
+    </div>
+    <div class="bottom-line">
+        <span class="bottom-line--copy">Copyright &copy; 2020</span>
+        <div class="bottom-line--icons">
+            <a href="#" class="btn btn--small"><img src="{% static 'images/icon-facebook.svg' %}"/></a>
+            <a href="#" class="btn btn--small"><img src="{% static 'images/icon-instagram.svg' %}"/></a>
+        </div>
+    </div>
+</footer>
 </body>
+<script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+<script src="{% static 'js/app.js' %}"></script>
+
 </html>
