@@ -1,8 +1,11 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
 # Create your views here.
+from django.utils.decorators import method_decorator
 from django.views import View
 
 from charityapp.forms import *
@@ -83,5 +86,38 @@ class LogoutView(View):
 
 
 class AddDonationView(View):
+
+    @method_decorator(login_required)
     def get(self, request):
-        return render(request, 'add-donation.html')
+        categories = Category.objects.all()
+        institutions = Institution.objects.all()
+        return render(request, 'add-donation.html', {"categories": categories,
+                                                     "institutions": institutions})
+
+    @method_decorator(login_required)
+    def post(self, request):
+        quantity = request.POST['bags']
+        categories = request.POST.getlist('categories')
+        institution_id = int(request.POST['organization'])
+        institution = Institution.objects.get(pk=institution_id)
+        address = request.POST['address']
+        phone_number = int(request.POST['phone'])
+        city = request.POST['city']
+        zip_code = request.POST['postcode']
+        pick_up_date = request.POST['data']
+        pick_up_time = request.POST['time']
+        pick_up_comment = request.POST['more_info']
+        user = request.user
+        donation = Donation.objects.create(quantity=quantity,
+                                           institution=institution,
+                                           address=address,
+                                           phone_number=phone_number,
+                                           city=city,
+                                           zip_code=zip_code,
+                                           pick_up_date=pick_up_date,
+                                           pick_up_time=pick_up_time,
+                                           pick_up_comment=pick_up_comment,
+                                           user=user)
+        for category in categories:
+            donation.categories.add(Category.objects.get(name=category))
+        return render(request, 'donation-success.html')
