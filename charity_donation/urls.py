@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path
 
 from charityapp.views import *
+from rest_api.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,4 +26,5 @@ urlpatterns = [
     path('register/', RegisterView.as_view(), name='register'),
     path('logout/', LogoutView.as_view(), name='logout'),
     path('add_donation/', AddDonationView.as_view(), name='add_donation'),
+    path('api/institutions/', InstitutionsView.as_view(), name='institutions'),
 ]
