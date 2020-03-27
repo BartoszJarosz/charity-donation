@@ -64,7 +64,6 @@
 
         <a href="{% url 'register' %}" class="btn btn--large">Załóż konto</a>
     </section>
-
     <section id="about-us" class="about-us">
         <div class="about-us--text">
             <h2>O nas</h2>
@@ -90,41 +89,13 @@
                 się zajmują, komu pomagają i czego potrzebują.</p>
 
             <ul class="help--slides-items">
-                {#                {% for fundation in fundations %}#}
-                {#                    <li>#}
-                {#                        <div class="col">#}
-                {#                            <div class="title">{{ fundation.name }}</div>#}
-                {#                            <div class="subtitle">{{ fundation.description }}</div>#}
-                {#                        </div>#}
-                {##}
-                {#                        <div class="col">#}
-                {#                            <div class="text">#}
-                {#                                {% for category in fundation.categories.all %}#}
-                {#                                    {{ category.name }},#}
-                {#                                {% endfor %}#}
-                {#                            </div>#}
-                {#                        </div>#}
-                {#                    </li>#}
-                {#                {% endfor %}#}
+
             </ul>
             <ul class="help--slides-pagination">
                 <li><a href="#" class="btn btn--small btn--without-border active" data-page="1">1</a></li>
                 <li><a href="#" class="btn btn--small btn--without-border" data-page="2">2</a></li>
             </ul>
 
-            {#            <ul class="help--slides-pagination">#}
-            {#                {% if fundations.has_previous %}#}
-            {#                    <li><a href="?fundations_page={{ fundations.previous_page_number }}#help"#}
-            {#                           class="btn btn--small btn--without-border"#}
-            {#                           data-page="1">{{ fundations.previous_page_number }}</a></li>#}
-            {#                {% endif %}#}
-            {#                <li class="btn btn--small btn--without-border active" data-page="2"> {{ fundations.number }} </li>#}
-            {#                {% if fundations.has_next %}#}
-            {#                    <li><a href="?fundations_page={{ fundations.next_page_number }}#help"#}
-            {#                           class="btn btn--small btn--without-border"#}
-            {#                           data-page="3">{{ fundations.next_page_number }}</a></li>#}
-            {#                {% endif %}#}
-            {#            </ul>#}
         </div>
 
 
@@ -134,36 +105,9 @@
                 Wspierane przez nas organizacje pozarządowe!
             </p>
             <ul class="help--slides-items">
-{#                {% for non_gov in non_govs %}#}
-{#                    <li>#}
-{#                        <div class="col">#}
-{#                            <div class="title"> {{ non_gov.name }}</div>#}
-{#                            <div class="subtitle">{{ non_gov.description }}</div>#}
-{#                        </div>#}
-{##}
-{#                        <div class="col">#}
-{#                            <div class="text">#}
-{#                                {% for category in non_gov.categories.all %}#}
-{#                                    {{ category.name }},#}
-{#                                {% endfor %}#}
-{#                            </div>#}
-{#                        </div>#}
-{#                    </li>#}
-{#                {% endfor %}#}
-{#                <ul class="help--slides-pagination">#}
-{#                    {% if non_govs.has_previous %}#}
-{#                        <li><a href="?non_govs_page={{ non_govs.previous_page_number }}#help"#}
-{#                               class="btn btn--small btn--without-border"#}
-{#                               data-page="1">{{ non_govs.previous_page_number }}</a></li>#}
-{#                    {% endif %}#}
-{#                    <li class="btn btn--small btn--without-border active" data-page="2"> {{ non_govs.number }} </li>#}
-{#                    {% if non_govs.has_next %}#}
-{#                        <li><a href="?non_govs_page={{ non_govs.next_page_number }}#help"#}
-{#                               class="btn btn--small btn--without-border"#}
-{#                               data-page="3">{{ non_govs.next_page_number }}</a></li>#}
-{#                    {% endif %}#}
-                </ul>
-                        <ul class="help--slides-pagination">
+
+            </ul>
+            <ul class="help--slides-pagination">
                 <li><a href="#" class="btn btn--small btn--without-border active" data-page="1">1</a></li>
                 <li><a href="#" class="btn btn--small btn--without-border" data-page="2">2</a></li>
             </ul>
@@ -173,37 +117,8 @@
         <div class="help--slides" data-id="3">
             <p>Zbiórki lokalne pod naszymi skrzydłami!</p>
             <ul class="help--slides-items">
-{#                {% for local in locals %}#}
-{#                    <li>#}
-{#                        <div class="col">#}
-{#                            <div class="title">{{ local.name }}</div>#}
-{#                            <div class="subtitle">{{ local.description }}</div>#}
-{#                        </div>#}
-{##}
-{#                        <div class="col">#}
-{#                            <div class="text">#}
-{#                                {% for category in local.categories.all %}#}
-{#                                    {{ category.name }},#}
-{#                                {% endfor %}#}
-{#                            </div>#}
-{#                        </div>#}
-{#                    </li>#}
-{#                {% endfor %}#}
-{#            </ul>#}
-{#            <ul class="help--slides-pagination">#}
-{#                {% if locals.has_previous %}#}
-{#                    <li><a href="?locals_page={{ locals.previous_page_number }}#help"#}
-{#                           class="btn btn--small btn--without-border"#}
-{#                           data-page="1">{{ locals.previous_page_number }}</a></li>#}
-{#                {% endif %}#}
-{#                <li class="btn btn--small btn--without-border active" data-page="2"> {{ locals.number }} </li>#}
-{#                {% if locals.has_next %}#}
-{#                    <li><a href="?locals_page={{ locals.next_page_number }}#help"#}
-{#                           class="btn btn--small btn--without-border"#}
-{#                           data-page="3">{{ locals.next_page_number }}</a></li>#}
-{#                {% endif %}#}
             </ul>
-                        <ul class="help--slides-pagination">
+            <ul class="help--slides-pagination">
                 <li><a href="#" class="btn btn--small btn--without-border active" data-page="1">1</a></li>
                 <li><a href="#" class="btn btn--small btn--without-border" data-page="2">2</a></li>
             </ul>
