@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    Twój profil
+{% endblock %}
+{% block content %}
+
+
+    <section class="">
+        Imię: {{ user.first_name }} <br>
+        Nazwisko: {{ user.last_name }}<br>
+        Email: {{ user.email }}<br>
+    twoje podarunki<br>
+    {% for donation in donations %}
+        {{ donation.id }} <br>
+    {% endfor %}
+    </section>
+{% endblock %}

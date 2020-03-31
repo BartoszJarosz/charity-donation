@@ -53,11 +53,23 @@ document.addEventListener("DOMContentLoaded", function () {
                     'data-page="' + page +
                     '">' + page +
                     '</a></li>';
-                pagination_str += '<li><a href="#" ' +
-                    'class="btn btn--small btn--without-border " ' +
-                    'data-page="' + next_page +
-                    '">' + next_page +
-                    '</a></li>';
+                var request = new XMLHttpRequest();
+                request.open(
+                    'GET',
+                    'http://127.0.0.1:8000/api/institutions/?page=' + next_page + '&type=' + type,
+                    false);
+                request.send(null
+                );
+
+                if (request.status === 200) {
+                    pagination_str += '<li><a href="#" ' +
+                        'class="btn btn--small btn--without-border " ' +
+                        'data-page="' + next_page +
+                        '">' + next_page +
+                        '</a></li>';
+
+                }
+
                 var pagination_html = $(pagination_str);
                 pagination_html.appendTo(organization.children().eq(2));
             }).fail(function (xhr, status, err) {

@@ -1,3 +1,5 @@
+import smtplib
+
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
@@ -5,11 +7,15 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
 # Create your views here.
+from django.template.loader import render_to_string
 from django.utils.decorators import method_decorator
+from django.utils.encoding import force_text, force_bytes
+from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.views import View
 
 from charityapp.forms import *
 from charityapp.models import *
+from charityapp.tokens import account_activation_token
 
 
 class IndexView(View):
@@ -49,11 +55,25 @@ class RegisterView(View):
             surname = form.cleaned_data['surname']
             email = form.cleaned_data['email']
             password = form.cleaned_data['password1']
-            User.objects.create_user(first_name=name,
-                                     last_name=surname,
-                                     username=email,
-                                     password=password,
-                                     email=email)
+            u = User.objects.create_user(first_name=name,
+                                         last_name=surname,
+                                         username=email,
+                                         password=password,
+                                         email=email)
+            u.is_active = False
+            u.save()
+            message = render_to_string('acc_active_email.html', {
+                'new_user': u,
+                'domain': '127.0.0.1:8000',
+                'uid': urlsafe_base64_encode(force_bytes(u.pk)),
+                'token': account_activation_token.make_token(u),
+            })
+            port = 1025
+            smtp_server = "localhost"
+            sender_email = "my@gmail.com"
+            receiver_email = u.email
+            with smtplib.SMTP(smtp_server, port) as server:
+                server.sendmail(sender_email, receiver_email, message)
             return render(request, 'register-complete.html')
         else:
             return render(request, 'register.html', {"form": form})
@@ -121,3 +141,28 @@ class AddDonationView(View):
         for category in categories:
             donation.categories.add(Category.objects.get(name=category))
         return render(request, 'donation-success.html')
+
+
+class UserView(View):
+    @method_decorator(login_required)
+    def get(self, request):
+        user = request.user
+        donations = Donation.objects.filter(user=user)
+        return render(request, 'user.html', {"donations": donations})
+
+
+class ActivateUser(View):
+    def get(self, request, uidb64, token):
+        try:
+            uid = force_text(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(pk=uid)
+        except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+            user = None
+        if user is not None and account_activation_token.check_token(user, token):
+            user.is_active = True
+            user.save()
+            login(request, user)
+            # return redirect('home')
+            return HttpResponse('Thank you for your email confirmation. Now you can login your account.')
+        else:
+            return HttpResponse('Activation link is invalid!')
