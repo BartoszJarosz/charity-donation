@@ -20,7 +20,7 @@ class Command(BaseCommand):
             if not u:
                 User.objects.create_user(first_name=fake.first_name(),
                                          last_name=fake.last_name(),
-                                         password='password',
+                                         password='Password123!',
                                          username=email,
                                          email=email)
         for category in CATEGORY_NAMES:

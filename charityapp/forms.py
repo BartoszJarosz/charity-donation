@@ -1,7 +1,7 @@
 from django import forms
 from django.core.validators import EmailValidator
 
-from charityapp.validators import ValidateEmail
+from charityapp.validators import *
 
 
 class LoginForm(forms.Form):
@@ -16,8 +16,8 @@ class AddUserForm(forms.Form):
     surname = forms.CharField(label="surname", widget=forms.TextInput(attrs={'placeholder': 'Nazwisko'}))
     email = forms.CharField(label="email",
                             widget=forms.EmailInput(attrs={'placeholder': 'Email'}),
-                            validators=[EmailValidator(), ValidateEmail])
-    password1 = forms.CharField(label="password1",
+                            validators=[EmailValidator(), validate_email])
+    password1 = forms.CharField(label="password1", validators=[validate_password],
                                 widget=forms.PasswordInput(attrs={'placeholder': 'Hasło'}))
     password2 = forms.CharField(label="password2",
                                 widget=forms.PasswordInput(attrs={'placeholder': 'Powtórz hasło'}))
@@ -50,13 +50,13 @@ class UserSettingsForm(forms.Form):
 
     def clean_email(self):
         if self.cleaned_data['email'] != self.user.email:
-            ValidateEmail(self.cleaned_data['email'])
+            validate_email(self.cleaned_data['email'])
 
 
 class ChangePasswordForm(forms.Form):
     old_password = forms.CharField(label="password1",
                                 widget=forms.PasswordInput(attrs={'placeholder': 'Stare hasło'}))
-    password1 = forms.CharField(label="password1",
+    password1 = forms.CharField(label="password1", validators=[validate_password],
                                 widget=forms.PasswordInput(attrs={'placeholder': 'Nowe hasło'}))
     password2 = forms.CharField(label="password2",
                                 widget=forms.PasswordInput(attrs={'placeholder': 'Powtórz hasło'}))

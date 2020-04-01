@@ -2,7 +2,6 @@ import smtplib
 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.core.paginator import Paginator
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
@@ -23,24 +22,9 @@ class IndexView(View):
         quantity = 0
         for donation in Donation.objects.all():
             quantity += donation.quantity
-        fundations_list = Institution.objects.filter(type=1)
-        non_gov_list = Institution.objects.filter(type=2)
-        locals_list = Institution.objects.filter(type=3)
-        paginator_fundations = Paginator(fundations_list, 5)
-        paginator_non_gov = Paginator(non_gov_list, 5)
-        paginator_locals = Paginator(locals_list, 5)
         count_institution = Institution.objects.all().count()
-        fundations_page = request.GET.get('fundations_page')
-        non_govs_page = request.GET.get('non_govs_page')
-        locals_page = request.GET.get('locals_page')
-        fundations = paginator_fundations.get_page(fundations_page)
-        non_govs = paginator_non_gov.get_page(non_govs_page)
-        locals = paginator_locals.get_page(locals_page)
         return render(request, 'index.html', {"quantity": quantity,
-                                              "count_institution": count_institution,
-                                              "fundations": fundations,
-                                              "non_govs": non_govs,
-                                              "locals": locals})
+                                              "count_institution": count_institution})
 
 
 class RegisterView(View):
@@ -190,17 +174,15 @@ class UserSettingsView(View):
         form = UserSettingsForm(data=request.POST, user=request.user)
         if form.is_valid():
             user = request.user
-            print(form.cleaned_data['email'])
-            print(form.cleaned_data['name'])
-            # if user.first_name != form.cleaned_data['name']:
-            #     user.first_name = form.cleaned_data['name']
-            # if user.last_name != form.cleaned_data['surname']:
-            #     user.last_name = form.cleaned_data['surname']
-            # if user.email != form.cleaned_data['email']:
-            #     user.email = form.cleaned_data['email']
-            #     user.username = form.cleaned_data['email']
+            if user.first_name != form.cleaned_data['name']:
+                user.first_name = form.cleaned_data['name']
+            if user.last_name != form.cleaned_data['surname']:
+                user.last_name = form.cleaned_data['surname']
+            if user.email != request.POST['email']:
+                user.email = request.POST['email']
+                user.username = request.POST['email']
             user.save()
-            message = 'Pomyślnie zmieniono dane!'
+            message = 'Pomyślnie zaktualizowano dane!'
             title = 'Zmiana danych'
             return render(request, 'basic.html', {'title': title, 'message': message})
         else:
