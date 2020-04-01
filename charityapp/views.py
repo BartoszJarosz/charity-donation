@@ -147,11 +147,16 @@ class UserView(View):
     @method_decorator(login_required)
     def get(self, request):
         user = request.user
-        donations = Donation.objects.filter(user=user)
+        donations = Donation.objects.filter(user=user). \
+            order_by('is_taken').\
+            order_by('pick_up_time').\
+            order_by('-pick_up_date')
+
         return render(request, 'user.html', {"donations": donations})
 
 
 class ActivateUser(View):
+    @method_decorator(login_required)
     def get(self, request, uidb64, token):
         try:
             uid = force_text(urlsafe_base64_decode(uidb64))
@@ -162,7 +167,6 @@ class ActivateUser(View):
             user.is_active = True
             user.save()
             login(request, user)
-            # return redirect('home')
             return HttpResponse('Thank you for your email confirmation. Now you can login your account.')
         else:
             return HttpResponse('Activation link is invalid!')

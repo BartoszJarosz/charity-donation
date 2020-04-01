@@ -15,3 +15,4 @@ class InstitutionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Institution
         fields = ("name", 'description', 'categories')
+

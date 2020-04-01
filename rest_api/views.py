@@ -18,7 +18,6 @@ class InstitutionsView(APIView):
             organizations_list = Institution.objects.filter(type=organizations_type).order_by('name')
             paginator = Paginator(organizations_list, 5)
             if int(page) > paginator.num_pages:
-                print('asdas')
                 raise Http404
             organizations = paginator.get_page(page)
         else:
