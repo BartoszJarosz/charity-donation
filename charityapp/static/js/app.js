@@ -278,8 +278,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 this.$next.forEach(btn => {
                     btn.addEventListener("click", e => {
                         e.preventDefault();
-                        this.currentStep++;
-                        this.updateForm();
+                        if (this.validateForm(this.currentStep)) {
+                            this.currentStep++;
+                            this.updateForm();
+                        }
                     });
                 });
 
@@ -291,9 +293,6 @@ document.addEventListener("DOMContentLoaded", function () {
                         this.updateForm();
                     });
                 });
-
-                // Form submit
-                this.$form.querySelector("form").addEventListener("submit", e => this.submit(e));
             }
 
             /**
@@ -319,21 +318,66 @@ document.addEventListener("DOMContentLoaded", function () {
                 // TODO: get data from inputs and show them in summary
 
                 // update fundation list
-                update_fundations()
+                update_fundations();
                 update_summmary()
 
             }
 
-            /**
-             * Submit form
-             *
-             * TODO: validation, send data to server
-             */
-            submit(e) {
-                // e.preventDefault();
-                // this.currentStep++;
-                // this.updateForm();
+
+            validateForm(step) {
+                switch (step) {
+                    case 1:
+                        var cat = $("[name='categories']")
+                        for (var i = 0; i < cat.length; i++) {
+                            if ($(cat[i]).is(":checked")) {
+                                return true
+                            }
+                        }
+                        alert("Zaznacz przynajmniej jedna kategorie!")
+                        return false;
+                    case 2:
+                        if ($("[name='bags']").val() > 0) {
+                            return true
+                        }
+                        alert("Podaj liczbe wieksza od 0!")
+                        return false;
+                    case 3:
+                        var org = $("[name='organization']")
+                        for (var i = 0; i < org.length; i++) {
+                            if ($(org[i]).is(":checked")) {
+                                return true
+                            }
+                        }
+                        alert("Zaznacz organizacje dla ktorej chcialbys przekazac dary!")
+                        return false;
+                    case 4:
+                        console.log($("[name='time']").val())
+                        if ($("[name='address']").val().length === 0) {
+                            alert("Wpisz swoja ulice i numer domu!");
+                            return false
+                        } else if ($("[name='city']").val().length === 0) {
+                            alert("Wpisz miasto!");
+                            return false
+                        } else if ($("[name='postcode']").val().length !== 6
+                            || !($("[name='postcode']").val().match(/(\d{2}-\d{3})/gm))) {
+                            alert("Wpisz poprawny kod pocztowy!");
+                            return false
+                        } else if ($("[name='phone']").val().length !== 9
+                            || !($("[name='phone']").val().match(/(\d{9})/gm))) {
+                            alert("Wpisz poprawny numer telefonu!");
+                            return false
+                        } else if ($("[name='data']").val().length === 0) {
+                            alert("Wpisz poprawna date!");
+                            return false
+                        } else if ($("[name='time']").val().length === 0) {
+                            alert("Wpisz godzine odbioru!");
+                            return false
+                        }
+                        return true
+
+                }
             }
+
         }
 
         const form = document.querySelector(".form--steps");

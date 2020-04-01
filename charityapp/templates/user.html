@@ -10,9 +10,19 @@
         Imię: {{ user.first_name }} <br>
         Nazwisko: {{ user.last_name }}<br>
         Email: {{ user.email }}<br>
-    twoje podarunki<br>
+{#    It is {% now "F d Y" %}#}
+    Twoje podarunki:<br>
     {% for donation in donations %}
-        {{ donation.id }} <br>
+        {{ donation.pick_up_date }}
+        {% for category in donation.categories.all %}
+            {{ category.name }}
+        {% endfor %}
+        {{ donation.pick_up_date }} {{ donation.pick_up_time }}
+        {% if donation.is_taken %}
+            (Odebrane)
+        {% elif not donation.is_taken and donation.pick_up_date < now  %}
+            dupa dup
+        {% endif %}<br>
     {% endfor %}
     </section>
 {% endblock %}
