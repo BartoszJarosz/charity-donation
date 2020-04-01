@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'charityapp',
     'rest_framework',
-    'rest_api'
+    'api',
+    'widget_tweaks'
 ]
 
 MIDDLEWARE = [
