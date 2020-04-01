@@ -74,7 +74,9 @@ class RegisterView(View):
             receiver_email = u.email
             with smtplib.SMTP(smtp_server, port) as server:
                 server.sendmail(sender_email, receiver_email, message)
-            return render(request, 'register-complete.html')
+                title = 'Rejestracja ukończona'
+                message_render = 'Rejestracja poprawnie ukończona! Na e-mail dostaniesz link aktywacyjny!'
+            return render(request, 'basic.html', {"message": message_render, "title": title})
         else:
             return render(request, 'register.html', {"form": form})
 
@@ -148,8 +150,8 @@ class UserView(View):
     def get(self, request):
         user = request.user
         donations = Donation.objects.filter(user=user). \
-            order_by('is_taken').\
-            order_by('pick_up_time').\
+            order_by('is_taken'). \
+            order_by('pick_up_time'). \
             order_by('-pick_up_date')
 
         return render(request, 'user.html', {"donations": donations})
@@ -170,3 +172,61 @@ class ActivateUser(View):
             return HttpResponse('Thank you for your email confirmation. Now you can login your account.')
         else:
             return HttpResponse('Activation link is invalid!')
+
+
+class UserSettingsView(View):
+
+    @method_decorator(login_required)
+    def get(self, request):
+        form = UserSettingsForm(user=request.user)
+        user = request.user
+        form.fields['email'].widget.attrs['value'] = user.email
+        form.fields['name'].widget.attrs['value'] = user.first_name
+        form.fields['surname'].widget.attrs['value'] = user.last_name
+        return render(request, 'user-settings.html', {'form': form})
+
+    @method_decorator(login_required)
+    def post(self, request):
+        form = UserSettingsForm(data=request.POST, user=request.user)
+        if form.is_valid():
+            user = request.user
+            print(form.cleaned_data['email'])
+            print(form.cleaned_data['name'])
+            # if user.first_name != form.cleaned_data['name']:
+            #     user.first_name = form.cleaned_data['name']
+            # if user.last_name != form.cleaned_data['surname']:
+            #     user.last_name = form.cleaned_data['surname']
+            # if user.email != form.cleaned_data['email']:
+            #     user.email = form.cleaned_data['email']
+            #     user.username = form.cleaned_data['email']
+            user.save()
+            message = 'Pomyślnie zmieniono dane!'
+            title = 'Zmiana danych'
+            return render(request, 'basic.html', {'title': title, 'message': message})
+        else:
+            return render(request, 'user-settings.html', {'form': form})
+
+
+class ChangePasswordView(View):
+
+    @method_decorator(login_required)
+    def get(self, request):
+        form = ChangePasswordForm(user=request.user)
+        return render(request, 'change-password.html', {'form': form})
+
+    @method_decorator(login_required)
+    def post(self, request):
+        form = ChangePasswordForm(data=request.POST, user=request.user)
+        if form.is_valid():
+            user = request.user
+            username = user.email
+            user.set_password(form.cleaned_data['password1'])
+            user.save()
+            user = authenticate(username=username, password=form.cleaned_data['password1'])
+            if user is not None:
+                login(request, user)
+            message = 'Pomyślnie zmieniono hasło!'
+            title = 'Zmiana hasła'
+            return render(request, 'basic.html', {'title': title, 'message': message})
+        else:
+            return render(request, 'change-password.html', {'form': form})

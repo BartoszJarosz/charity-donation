@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path, re_path
 
 from charityapp.views import *
-from rest_api.views import *
+from api.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls, name='admin'),
@@ -29,5 +29,9 @@ urlpatterns = [
     path('api/institutions/', InstitutionsView.as_view(), name='institutions'),
     path('user/', UserView.as_view(), name='user'),
     re_path(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
-        ActivateUser.as_view(), name='activate'),
+            ActivateUser.as_view(), name='activate'),
+    path('api/donations/', DonationsView.as_view(), name='donations'),
+    path('api/user/donations/', UserDonationsView.as_view(), name='user_donations'),
+    path('settings/', UserSettingsView.as_view(), name='user_settings'),
+    path('change_password/', ChangePasswordView.as_view(), name='change_password')
 ]

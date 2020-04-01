@@ -319,7 +319,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 // update fundation list
                 update_fundations();
-                update_summmary()
+                update_summary()
 
             }
 
@@ -430,7 +430,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
 
-        function update_summmary() {
+        function update_summary() {
 
             $('#summary_address').text($("[name='address']").val());
             $('#summary_city').text($("[name='city']").val());

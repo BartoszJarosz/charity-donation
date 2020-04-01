@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    Ustawienia
+{% endblock %}
+{% block header %}
+    header--form-page
+{% endblock %}
+{% block content %}
+    <section class="login-page">
+        <h2>Zmień swoje dane</h2>
+        <form action="{% url 'user_settings' %}" method="post">
+            {% csrf_token %}
+            {{ form.email.errors }}
+            <div class="form-group">
+                {{ form.email }}
+            </div>
+            {{ form.name.errors }}
+            <div class="form-group">
+                {{ form.name }}
+            </div>
+            {{ form.surname.errors }}
+            <div class="form-group">
+                {{ form.surname }}
+            </div>
+            {{ form.password.errors }}
+            <div class="form-group">
+                {{ form.password }}
+            </div>
+            <button class="btn" type="submit">Zmień</button>
+            <a href="{% url 'change_password' %}" class="btn">Zmień hasło</a>
+            </div>
+        </form>
+    </section>
+{% endblock %}
