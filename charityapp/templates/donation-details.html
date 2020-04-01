@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    Zbiórka użytkownika {{ donation.user }}
+{% endblock %}
+{% block head %}
+    <section>
+        <h2>Twój profil</h2>
+
+        <div class="container container--85">
+            <div class="stats--item" style="display: inline-block">
+                <h3>Rzeczy</h3>
+                <p>
+                    {% for category in donation.categories.all %}
+                        {{ category }}
+                    {% endfor %}
+                </p>
+            </div>
+            <div class="stats--item" style="display: inline-block">
+                <h3>Dla kogo</h3>
+                <p>{{ donation.institution }}</p>
+            </div>
+            <div class="stats--item" style="display: inline-block">
+                <h3>Ilość</h3>
+                <p>{{ donation.quantity }} worków</p>
+            </div>
+            <div class="stats--item" style="display: inline-block">
+                <h3>Adres do odbioru</h3>
+                <p>{{ donation.address }}, {{ donation.zip_code }} {{ donation.city }}</p>
+            </div>
+            <div class="stats--item" style="display: inline-block">
+                <h3>Data odbioru</h3>
+                <p>{{ donation.pick_up_date }}</p>
+            </div>
+            <div class="stats--item" style="display: inline-block">
+                <h3>Status</h3>
+                <p>
+                    {% if donation.is_taken %}
+                        Odebrana
+                    {% else %}
+                        Czeka na odbiór
+                        {% if user == donation.user %}
+                            <form method="post" action="{% url 'donation_details' id=donation.id %}">
+                                {% csrf_token %}
+                                <input type="submit" class="btn btn--small" value="Potwierdź odbiór">
+                            </form>
+                        {% endif %}
+                    {% endif %}
+                </p>
+            </div>
+            <div class="stats--item" style="display: inline-block">
+                <h3>Informacje dla kuriera</h3>
+                <p>{{ donation.pick_up_comment }}</p>
+            </div>
+
+        </div>
+    </section>
+{% endblock %}

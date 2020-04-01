@@ -3,25 +3,47 @@
 {% block title %}
     Twój profil
 {% endblock %}
-{% block content %}
+{% block header %}
+    {#    header--form-page#}
+{% endblock %}s
+{% block head %}
+    <section>
+        <h2>Twój profil</h2>
 
+        <div class="container container--85">
+            <div class="stats--item" style="display: inline-block">
+                <h3>Imię</h3>
+                <p>{{ user.first_name }}</p>
+            </div>
+            <div class="stats--item" style="display: inline-block">
+                <h3>Nazwisko</h3>
+                <p>{{ user.last_name }}</p>
+            </div>
+            <div class="stats--item" style="display: inline-block">
+                <h3>Email</h3>
+                <p>{{ user.email }}</p>
+            </div>
 
-    <section class="">
-        Imię: {{ user.first_name }} <br>
-        Nazwisko: {{ user.last_name }}<br>
-        Email: {{ user.email }}<br>
-        Twoje podarunki:<br>
-        {% for donation in donations %}
-            {{ donation.pick_up_date }}
-            {% for category in donation.categories.all %}
-                {{ category.name }}
-            {% endfor %}
-            {{ donation.pick_up_date }} {{ donation.pick_up_time }}
-            {% if donation.is_taken %}
-                (Odebrane)
-            {% elif not donation.is_taken and donation.pick_up_date < now %}
-                dupa dup
-            {% endif %}<br>
-        {% endfor %}
+            <div id="donation_list" class="stats--item">
+                <em>{{ count_institution }}</em>
+                <h3>Lista twoich zbiórek!</h3>
+                <ul class="donation_list">
+                    {% for donation in donations %}
+                        <li{% if donation.is_taken %}
+                            class="taken"
+                        {% endif %}
+                        ><a href="{% url 'donation_details' id=donation.id %}">
+                            {% for category in donation.categories.all %}
+                                {{ category.name }}
+                            {% endfor %}
+                            {{ donation.pick_up_date }} {{ donation.pick_up_time }}
+                        </a>
+                        </li>
+                    {% endfor %}
+
+                </ul>
+            </div>
+
+        </div>
     </section>
 {% endblock %}

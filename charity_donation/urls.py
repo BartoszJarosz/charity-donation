@@ -33,5 +33,7 @@ urlpatterns = [
     path('api/donations/', DonationsView.as_view(), name='donations'),
     path('api/user/donations/', UserDonationsView.as_view(), name='user_donations'),
     path('settings/', UserSettingsView.as_view(), name='user_settings'),
-    path('change_password/', ChangePasswordView.as_view(), name='change_password')
+    path('change_password/', ChangePasswordView.as_view(), name='change_password'),
+    path('donation/<int:id>/', DonationDetailsView.as_view(), name='donation_details'),
+
 ]

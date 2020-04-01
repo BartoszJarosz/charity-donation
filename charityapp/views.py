@@ -3,7 +3,7 @@ import smtplib
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 
 # Create your views here.
 from django.template.loader import render_to_string
@@ -126,7 +126,9 @@ class AddDonationView(View):
                                            user=user)
         for category in categories:
             donation.categories.add(Category.objects.get(name=category))
-        return render(request, 'donation-success.html')
+        message = 'Dziękujemy za pomoc!'
+        title = 'Oddaj rzeczy'
+        return render(request, 'basic.html', {"message": message, "title": title})
 
 
 class UserView(View):
@@ -134,10 +136,7 @@ class UserView(View):
     def get(self, request):
         user = request.user
         donations = Donation.objects.filter(user=user). \
-            order_by('is_taken'). \
-            order_by('pick_up_time'). \
-            order_by('-pick_up_date')
-
+            order_by('is_taken', '-pick_up_date')
         return render(request, 'user.html', {"donations": donations})
 
 
@@ -212,3 +211,19 @@ class ChangePasswordView(View):
             return render(request, 'basic.html', {'title': title, 'message': message})
         else:
             return render(request, 'change-password.html', {'form': form})
+
+
+class DonationDetailsView(View):
+
+    @method_decorator(login_required)
+    def get(self, request, id):
+        donation = get_object_or_404(Donation, pk=id)
+        return render(request, 'donation-details.html', {"donation": donation})
+
+    @method_decorator(login_required)
+    def post(self, request, id):
+        donation = get_object_or_404(Donation, pk=id)
+        if request.user == donation.user:
+            donation.is_taken = True
+            donation.save()
+        return render(request, 'donation-details.html', {"donation": donation})
