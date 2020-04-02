@@ -29,14 +29,15 @@
                 <p>{{ donation.address }}, {{ donation.zip_code }} {{ donation.city }}</p>
             </div>
             <div class="stats--item" style="display: inline-block">
-                <h3>Data odbioru</h3>
+                <h3>Planowana <br> data odbioru</h3>
                 <p>{{ donation.pick_up_date }}</p>
             </div>
             <div class="stats--item" style="display: inline-block">
                 <h3>Status</h3>
                 <p>
                     {% if donation.is_taken %}
-                        Odebrana
+                        Odebrana <br>
+                        {{ donation.taken_date }}
                     {% else %}
                         Czeka na odbiór
                         {% if user == donation.user %}

@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    Zapomniane hasło
+{% endblock %}
+{% block header %}
+    header--form-page
+{% endblock %}
+{% block head %}
+    <section class="login-page">
+        <h2>Przypomnij hasło</h2>
+        <form action="" method="post">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            {{ form.password1.errors }}
+            <div class="form-group">
+                {{ form.password1 }}
+            </div>
+            <div class="form-group">
+                {{ form.password2 }}
+            </div>
+            <div>
+            <button class="btn btn--small" type="submit">Zmień</button>
+            </div>
+        </form>
+    </section>
+{% endblock %}

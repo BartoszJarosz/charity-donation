@@ -1,3 +1,4 @@
+import datetime
 import smtplib
 
 from django.contrib.auth import authenticate, login, logout
@@ -14,7 +15,7 @@ from django.views import View
 
 from charityapp.forms import *
 from charityapp.models import *
-from charityapp.tokens import account_activation_token
+from charityapp.tokens import account_activation_token, password_reset_token
 
 
 class IndexView(View):
@@ -58,8 +59,8 @@ class RegisterView(View):
             receiver_email = u.email
             with smtplib.SMTP(smtp_server, port) as server:
                 server.sendmail(sender_email, receiver_email, message)
-                title = 'Rejestracja ukończona'
-                message_render = 'Rejestracja poprawnie ukończona! Na e-mail dostaniesz link aktywacyjny!'
+                title = 'Rejestracja ukonczona'
+                message_render = 'Rejestracja poprawnie ukonczona! Na e-mail dostaniesz link aktywacyjny!'
             return render(request, 'basic.html', {"message": message_render, "title": title})
         else:
             return render(request, 'register.html', {"form": form})
@@ -140,9 +141,10 @@ class UserView(View):
         return render(request, 'user.html', {"donations": donations})
 
 
-class ActivateUser(View):
-    @method_decorator(login_required)
+class ActivateUserView(View):
+
     def get(self, request, uidb64, token):
+        title = 'Aktywacja konta'
         try:
             uid = force_text(urlsafe_base64_decode(uidb64))
             user = User.objects.get(pk=uid)
@@ -152,9 +154,11 @@ class ActivateUser(View):
             user.is_active = True
             user.save()
             login(request, user)
-            return HttpResponse('Thank you for your email confirmation. Now you can login your account.')
+            message = 'Dziękujemy za potwierdzenie! Zostałeś zalogowany do swojego konta!'
         else:
-            return HttpResponse('Activation link is invalid!')
+            message = ('Link jest nieaktywny!')
+
+        return render(request, 'basic.html', {'title': title, 'message': message})
 
 
 class UserSettingsView(View):
@@ -225,5 +229,75 @@ class DonationDetailsView(View):
         donation = get_object_or_404(Donation, pk=id)
         if request.user == donation.user:
             donation.is_taken = True
+            donation.taken_date = datetime.date.today()
             donation.save()
         return render(request, 'donation-details.html', {"donation": donation})
+
+
+class ResetPasswordView(View):
+
+    def get(self, request):
+        form = ResetPasswordForm()
+        return render(request, 'reset-password.html', {"form": form})
+
+    def post(self, request):
+        form = ResetPasswordForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            u = User.objects.get(email=email)
+            message = render_to_string('acc-reset-password-email.html', {
+                'new_user': u,
+                'domain': '127.0.0.1:8000',
+                'uid': urlsafe_base64_encode(force_bytes(u.pk)),
+                'token': password_reset_token.make_token(u),
+            })
+            port = 1025
+            smtp_server = "localhost"
+            sender_email = "my@gmail.com"
+            receiver_email = u.email
+            with smtplib.SMTP(smtp_server, port) as server:
+                server.sendmail(sender_email, receiver_email, message)
+                title = 'Zapomniane hasło'
+                message_render = 'Na email wysłaliśmy link do resetowania hasła!'
+            return render(request, 'basic.html', {"message": message_render, "title": title})
+        else:
+            return render(request, 'reset-password.html', {"form": form})
+
+
+class ResetView(View):
+
+    def get(self, request, uidb64, token):
+        title = 'Resetowanie hasła'
+        try:
+            uid = force_text(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(pk=uid)
+        except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+            user = None
+        if user is not None and account_activation_token.check_token(user, token):
+            form = ResetForm()
+            return render(request, 'reset.html', {"form": form})
+        else:
+            message = ('Link jest nieaktywny!')
+            return render(request, 'basic.html', {'title': title, 'message': message})
+
+
+    def post(self, request, uidb64, token):
+        title = 'Resetowanie hasła'
+        try:
+            uid = force_text(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(pk=uid)
+        except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+            user = None
+        if user is not None and account_activation_token.check_token(user, token):
+            form = ResetForm(request.POST)
+            if form.is_valid():
+                password = form.cleaned_data['password1']
+                user.set_password(password)
+                user.save()
+                message = ('Pomyślnie zmieniona hasło! Możesz się teraz zalogować')
+                return render(request, 'basic.html', {'title': title, 'message': message})
+            else:
+                return render(request, 'reset.html', {"form": form})
+        else:
+            message = ('Link jest nieaktywny!')
+            return render(request, 'basic.html', {'title': title, 'message': message})

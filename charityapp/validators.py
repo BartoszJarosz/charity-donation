@@ -18,3 +18,9 @@ def validate_password(value):
             not re.search(r'[A-Z]', value):
         raise ValidationError(
             "Hasło musi posiadać przynajmniej jeden znak specjalny, jedną cyfrę, dużą i małą litere!")
+
+
+def validate_email_exsist(value):
+    u = User.objects.filter(email=value)
+    if not u:
+        raise ValidationError('W naszej bazie nie ma użytkownika o podanym emailu!')
