@@ -20,7 +20,7 @@
                     Witaj {{ user.first_name }}
                     <ul class="dropdown">
                         <li><a href="{% url 'user' %}">Profil</a></li>
-                        <li><a href="{% url 'user' %}">Moje zbiórki</a></li>
+                        <li><a href="{% url 'user' %}#donation_list">Moje zbiórki</a></li>
                         <li><a href="{% url 'user_settings' %}">Ustawienia</a></li>
                         {% if user.is_superuser %}
                             <li><a href="/admin/">Panel administracyjny</a></li>

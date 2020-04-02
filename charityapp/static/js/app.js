@@ -413,12 +413,15 @@ document.addEventListener("DOMContentLoaded", function () {
         function update_fundations() {
             var organizations = $("[name='organization']");
             for (var i = 0; i < organizations.length; i++) {
-                var hidden = true
+                var hidden = false;
                 var cat = $(organizations[i]).data('category').replace(/(\r\n|\n|\r)\s+/gm, "").split(',');
                 cat.pop();
-                for (var j = 0; j < cat.length; j++) {
-                    if (checked_categories.includes(cat[j])) {
+                for (var j = 0; j < checked_categories.length; j++) {
+                    if (cat.includes(checked_categories[j])) {
                         hidden = false
+                    } else {
+                        hidden = true
+                        break
                     }
                 }
                 if (hidden) {

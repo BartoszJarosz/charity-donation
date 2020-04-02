@@ -29,9 +29,13 @@ urlpatterns = [
     path('api/institutions/', InstitutionsView.as_view(), name='institutions'),
     path('user/', UserView.as_view(), name='user'),
     re_path(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
-            ActivateUser.as_view(), name='activate'),
+            ActivateUserView.as_view(), name='activate'),
     path('api/donations/', DonationsView.as_view(), name='donations'),
     path('api/user/donations/', UserDonationsView.as_view(), name='user_donations'),
     path('settings/', UserSettingsView.as_view(), name='user_settings'),
-    path('change_password/', ChangePasswordView.as_view(), name='change_password')
+    path('change_password/', ChangePasswordView.as_view(), name='change_password'),
+    path('donation/<int:id>/', DonationDetailsView.as_view(), name='donation_details'),
+    path('reset_password/', ResetPasswordView.as_view(), name='reset_password'),
+    re_path(r'^reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
+            ResetView.as_view(), name='reset'),
 ]

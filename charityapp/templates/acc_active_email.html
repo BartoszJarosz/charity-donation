@@ -1,4 +1,4 @@
 {% autoescape off %}
-    Cześć{{ new_user.username }},
-    Please click on the link to confirm your registration, http://{{ domain }}{% url 'activate' uidb64=uid token=token %}
+    Czesc {{ new_user.username }},
+    Kliknij w link aby dokonczyc rejestracje, http://{{ domain }}{% url 'activate' uidb64=uid token=token %}
 {% endautoescape %}

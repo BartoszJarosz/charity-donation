@@ -55,7 +55,7 @@ class UserSettingsForm(forms.Form):
 
 class ChangePasswordForm(forms.Form):
     old_password = forms.CharField(label="password1",
-                                widget=forms.PasswordInput(attrs={'placeholder': 'Stare hasło'}))
+                                   widget=forms.PasswordInput(attrs={'placeholder': 'Stare hasło'}))
     password1 = forms.CharField(label="password1", validators=[validate_password],
                                 widget=forms.PasswordInput(attrs={'placeholder': 'Nowe hasło'}))
     password2 = forms.CharField(label="password2",
@@ -76,3 +76,16 @@ class ChangePasswordForm(forms.Form):
         valid = self.user.check_password(self.cleaned_data['old_password'])
         if not valid:
             raise forms.ValidationError('Podaj poprawne hasło!')
+
+
+class ResetPasswordForm(forms.Form):
+    email = forms.CharField(label="email",
+                            widget=forms.EmailInput(attrs={'placeholder': 'Email'}),
+                            validators=[EmailValidator(), validate_email_exsist])
+
+
+class ResetForm(forms.Form):
+    password1 = forms.CharField(label="password1", validators=[validate_password],
+                                widget=forms.PasswordInput(attrs={'placeholder': 'Nowe hasło'}))
+    password2 = forms.CharField(label="password2",
+                                widget=forms.PasswordInput(attrs={'placeholder': 'Powtórz hasło'}))
