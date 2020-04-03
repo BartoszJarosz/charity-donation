@@ -351,7 +351,6 @@ document.addEventListener("DOMContentLoaded", function () {
                         alert("Zaznacz organizacje dla ktorej chcialbys przekazac dary!")
                         return false;
                     case 4:
-                        console.log($("[name='time']").val())
                         if ($("[name='address']").val().length === 0) {
                             alert("Wpisz swoja ulice i numer domu!");
                             return false

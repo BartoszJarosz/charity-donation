@@ -38,7 +38,6 @@ INSTALLED_APPS = [
     'charityapp',
     'rest_framework',
     'api',
-    'widget_tweaks'
 ]
 
 MIDDLEWARE = [
